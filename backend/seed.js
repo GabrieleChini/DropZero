@@ -63,6 +63,21 @@ const seedData = async () => {
             status: 'ACTIVE'
         });
 
+        // Create Demo User for Google Mock
+        const demoUser = await User.create({
+            email: 'gabrielegabryc@gmail.com',
+            firstName: 'Gabriele',
+            lastName: 'Chini',
+            codiceFiscale: 'CHNGRL98A01L219X',
+            address: 'Via Belenzani, 19, 38122 Trento TN',
+            phoneNumber: '+39 0461 884111',
+            password: 'password123',
+            userType: 'PRIVATE',
+            roles: ['user'],
+            status: 'ACTIVE'
+        });
+        users.push(demoUser);
+
         // Create 20 Users
         for (let i = 0; i < 20; i++) {
             const firstName = faker.person.firstName();
@@ -115,7 +130,7 @@ const seedData = async () => {
 
             // Random household size for this user (1-5 people)
             const householdSize = faker.number.int({ min: 1, max: 5 });
-            const basePerPerson = 1.2; // Cubic meters per week per person roughly
+            const basePerPerson = 1.6; // ~228L per day per person (ISTAT average)
 
             // Normalize Start Date to a fixed point relative to NOW, but at 00:00:00
             const today = new Date();
@@ -165,14 +180,14 @@ const seedData = async () => {
                     volumeConsumed: Math.round(consumption * 1000), // Liters
                     volumeM3: parseFloat(consumption.toFixed(2)),
                     readingType: 'TELELETTURA',
-                    cost: parseFloat((consumption * domesticTariff.baseRate).toFixed(2)) // Simplified cost
+                    cost: parseFloat((2.31 + (consumption * 2.10)).toFixed(2)) // 2.31 Fixed + 2.10/m3 variable
                 });
                 readings.push(reading);
             }
 
             // Generate Bill for last month
             await Bill.create({
-                billId: `BILL-${faker.date.recent().getFullYear()}-${faker.string.numeric(4)}`,
+                billId: `BILL-${new Date().getFullYear()}-${faker.string.numeric(6)}-${user._id.toString().slice(-4)}`,
                 userId: user._id,
                 meterId: meter._id,
                 billingPeriodStart: readings[4].weekStartDate,

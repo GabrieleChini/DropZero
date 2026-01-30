@@ -5,9 +5,6 @@ const Bill = require('../models/Bill');
 // @desc    Get dashboard stats (last reading, trend, estimated cost)
 // @route   GET /api/readings/dashboard/:userId
 // @access  Private
-// @desc    Get dashboard stats (last reading, trend, estimated cost)
-// @route   GET /api/readings/dashboard/:userId
-// @access  Private
 exports.getDashboardStats = async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -36,9 +33,34 @@ exports.getDashboardStats = async (req, res) => {
             trend = ((current.volumeConsumed - previous.volumeConsumed) / previous.volumeConsumed) * 100;
         }
 
-        // Calculate Average (last 4 weeks)
-        const totalVol = readings.reduce((acc, r) => acc + r.volumeConsumed, 0);
-        const avgVol = totalVol / readings.length;
+        // Calculate Averages (last 4 weeks excluding current)
+        const pastReadings = readings.slice(1);
+        const avgVol = pastReadings.length > 0
+            ? pastReadings.reduce((acc, r) => acc + r.volumeConsumed, 0) / pastReadings.length
+            : current.volumeConsumed;
+
+        // Savings vs Average (for dynamic widget)
+        const savingsPercentage = avgVol > 0
+            ? ((avgVol - current.volumeConsumed) / avgVol) * 100
+            : 0;
+
+        const avgCost = pastReadings.length > 0
+            ? pastReadings.reduce((acc, r) => acc + r.cost, 0) / pastReadings.length
+            : current.cost;
+
+        // Cost Trend Percentage
+        const costTrendPercentage = avgCost > 0
+            ? ((current.cost - avgCost) / avgCost) * 100
+            : 0;
+
+        // Determine Cost Status Label
+        let costStatus = 'In media';
+        if (costTrendPercentage < -5) costStatus = 'In calo';
+        else if (costTrendPercentage > 15) costStatus = 'In aumento';
+        else if (costTrendPercentage > 5) costStatus = 'In leggero aumento';
+
+        // Monthly Projection calculation
+        const estimatedMonthlyCost = current.cost * 4.33; // Average weeks per month
 
         // Suggestion Logic (Enhanced)
         const suggestions = [];
@@ -46,18 +68,18 @@ exports.getDashboardStats = async (req, res) => {
         // 1. Trend Analysis
         if (trend > 20) {
             suggestions.push({ type: 'warning', title: 'Picco di Consumo', text: `Attenzione: hai consumato il ${trend.toFixed(0)}% in più rispetto alla settimana scorsa.` });
-        } else if (trend < -10) {
-            suggestions.push({ type: 'success', title: 'Ottimo Risparmio', text: `Hai ridotto i consumi del ${Math.abs(trend).toFixed(0)}%. Continua così!` });
+        } else if (savingsPercentage > 10) {
+            suggestions.push({ type: 'success', title: 'Ottimo Risparmio', text: `Stai consumando il ${savingsPercentage.toFixed(0)}% in meno rispetto alla tua media abituale!` });
         }
 
         // 2. Average Comparison
-        if (current.volumeM3 > avgVol * 1.5) {
-            suggestions.push({ type: 'warning', title: 'Sopra la Media', text: 'Stai consumando molto più della tua media mensile. Controlla eventuali perdite.' });
+        if (current.volumeConsumed > avgVol * 1.3) {
+            suggestions.push({ type: 'warning', title: 'Sopra la Media', text: 'Stai consumando sensibilmente più della tua media abituale. Controlla eventuali perdite.' });
         }
 
         // 3. Absolute Check
-        if (current.volumeM3 > 10) { // arbitrary high threshold for a week
-            suggestions.push({ type: 'warning', title: 'Consumo Elevato', text: 'Hai superato i 10 metri cubi questa settimana. Valuta di ridurre l\'irrigazione.' });
+        if (current.volumeM3 > 12) { // 12m3 is high for a week for most families
+            suggestions.push({ type: 'warning', title: 'Consumo Elevato', text: 'Hai superato i 12 metri cubi questa settimana. Un valore sopra la norma.' });
         }
 
         // 4. General Tips (Randomized if few specific alerts)
@@ -68,7 +90,6 @@ exports.getDashboardStats = async (req, res) => {
                 { type: 'info', title: 'Controllo Perdite', text: 'Un rubinetto che gocciola può sprecare fino a 5.000 litri d\'acqua all\'anno.' },
                 { type: 'success', title: 'Obiettivo Eco', text: 'Hai mantenuto un consumo stabile. Ottimo per l\'ambiente!' }
             ];
-            // Add a random tip not already present (simplified)
             suggestions.push(tips[Math.floor(Math.random() * tips.length)]);
         }
 
@@ -77,8 +98,11 @@ exports.getDashboardStats = async (req, res) => {
             currentConsumption: current.volumeConsumed,
             lastReadingDate: current.weekEndDate,
             trendPercentage: trend.toFixed(1),
-            estimatedCost: current.cost,
-            suggestions: suggestions.slice(0, 3) // Return max 3 suggestions
+            savingsPercentage: savingsPercentage.toFixed(1),
+            estimatedCost: estimatedMonthlyCost,
+            costStatus,
+            costTrendPercentage: costTrendPercentage.toFixed(1),
+            suggestions: suggestions.slice(0, 3)
         });
 
     } catch (error) {
@@ -93,18 +117,14 @@ exports.addReading = async (req, res) => {
     try {
         const { userId, readingValue, date } = req.body;
 
-        // 1. Find Meter
         const meter = await require('../models/Meter').findOne({ userId, status: 'ACTIVE' });
         if (!meter) {
             return res.status(404).json({ message: 'Nessun contatore attivo trovato per questo utente.' });
         }
 
-        // 2. Find Last Reading
         const lastReading = await WeeklyReading.findOne({ meterId: meter._id }).sort({ currentReading: -1 });
-
         const previousReadingVal = lastReading ? lastReading.currentReading : 0;
 
-        // 3. Validate
         if (readingValue < previousReadingVal) {
             return res.status(400).json({ message: `La nuova lettura non può essere inferiore alla precedente (${previousReadingVal}).` });
         }
@@ -112,18 +132,15 @@ exports.addReading = async (req, res) => {
         const consumptionM3 = readingValue - previousReadingVal;
         const consumptionLiters = Math.round(consumptionM3 * 1000);
 
-        // Cost Approx (1.5 EUR/m3)
-        const cost = parseFloat((consumptionM3 * 1.5).toFixed(2));
-
-        // Date Handling
-        // If we have a last reading, this reading covers from last date to now.
-        // If not, it's a starting point (consumption 0? or logic implies valid prev).
-        // For simulation continuity, let's assume valid prev exists from seed.
+        // Realistic Italian Cost: 2.31 EUR Fixed Weekly + 2.10 EUR / m3
+        const fixedWeekly = 2.31;
+        const variableRate = 2.10;
+        const cost = parseFloat((fixedWeekly + (consumptionM3 * variableRate)).toFixed(2));
 
         const startDate = lastReading ? lastReading.weekEndDate : new Date(new Date(date).setDate(new Date(date).getDate() - 7));
 
         const newReading = await WeeklyReading.create({
-            readingId: `MN-${Date.now()}`, // Manual ID
+            readingId: `MN-${Date.now()}`,
             meterId: meter._id,
             userId,
             weekStartDate: startDate,
@@ -152,7 +169,6 @@ exports.addReading = async (req, res) => {
 exports.getHistory = async (req, res) => {
     try {
         const userId = req.params.userId;
-        // Simple pagination
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
@@ -183,16 +199,15 @@ exports.getChartData = async (req, res) => {
         const userId = req.params.userId;
         const timeframe = req.query.timeframe || '90days';
 
-        let limit = 12; // Default 90 days (approx 12 weeks)
+        let limit = 12;
         if (timeframe === '1year') {
             limit = 52;
         }
 
         const readings = await WeeklyReading.find({ userId })
-            .sort({ weekEndDate: -1 }) // Newest first
+            .sort({ weekEndDate: -1 })
             .limit(limit);
 
-        // Reverse to show chronologically (Oldest -> Newest) on chart
         const data = readings.reverse().map(r => ({
             name: new Date(r.weekEndDate).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' }),
             litri: r.volumeConsumed,
@@ -201,6 +216,7 @@ exports.getChartData = async (req, res) => {
 
         res.json(data);
     } catch (error) {
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -214,7 +230,6 @@ exports.getAdvice = async (req, res) => {
 
         const adviceList = [];
 
-        // 1. Analyze Trend
         if (readings.length >= 2) {
             const current = readings[0];
             const previous = readings[1];
@@ -233,9 +248,8 @@ exports.getAdvice = async (req, res) => {
             }
         }
 
-        // 2. Seasonal Advice (Simulated based on date)
         const month = new Date().getMonth();
-        if (month >= 5 && month <= 8) { // Summer
+        if (month >= 5 && month <= 8) {
             adviceList.push({
                 id: 'season-summer',
                 category: 'STAGIONALE',
@@ -247,7 +261,6 @@ exports.getAdvice = async (req, res) => {
             });
         }
 
-        // 3. Static Educational Advice
         adviceList.push(
             {
                 id: 'edu-1',
