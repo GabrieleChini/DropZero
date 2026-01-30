@@ -131,7 +131,7 @@ exports.getAlerts = async (req, res) => {
         const highReadings = await WeeklyReading.find({
             weekEndDate: { $gte: startOfDay, $lte: endOfDay },
             volumeM3: { $gt: 8 } // Threshold
-        }).populate('userId', 'firstName lastName address email');
+        });
 
         // Enhance with Meter info (for Zone)
         const meterIds = highReadings.map(r => r.meterId);
@@ -145,8 +145,6 @@ exports.getAlerts = async (req, res) => {
 
             return {
                 id: r._id,
-                user: r.userId ? `${r.userId.firstName} ${r.userId.lastName}` : 'Utente Sconosciuto',
-                address: r.userId ? r.userId.address : 'Indirizzo non disp.',
                 zone: meter ? meter.zone : 'N/A',
                 volume: r.volumeM3,
                 severity,

@@ -1,10 +1,29 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, History, User, LogOut, Droplets, Settings } from 'lucide-react';
+import { LayoutDashboard, History, User, LogOut, Droplets, Settings, Loader } from 'lucide-react';
+import { fetchDashboardData } from '../services/api';
 
 const Layout = ({ user }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const [stats, setStats] = React.useState(null);
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const loadStats = async () => {
+            if (user?._id && user?.token) {
+                try {
+                    const data = await fetchDashboardData(user._id, user.token);
+                    setStats(data);
+                } catch (err) {
+                    console.error("Layout stats fetch failed", err);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+        loadStats();
+    }, [user]);
 
     const handleLogout = () => {
         localStorage.removeItem('user');
@@ -15,8 +34,11 @@ const Layout = ({ user }) => {
         { path: '/', label: 'Overview', icon: LayoutDashboard },
         { path: '/readings', label: 'Storico Consumi', icon: History },
         { path: '/profile', label: 'Profilo Utente', icon: User },
-        // { path: '/settings', label: 'Impostazioni', icon: Settings },
     ];
+
+    if (user?.userType === 'ADMIN') {
+        navItems.push({ path: '/admin', label: 'Vista Comune', icon: Settings });
+    }
 
     return (
         <div className="min-h-screen bg-[#f8fafc] flex font-sans text-slate-900 overflow-hidden">
@@ -62,8 +84,18 @@ const Layout = ({ user }) => {
                             <Droplets size={80} />
                         </div>
                         <p className="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2 relative z-10">Tuo Risparmio</p>
-                        <div className="text-3xl font-bold text-emerald-400 mb-1 relative z-10">-15%</div>
-                        <p className="text-xs text-slate-300 relative z-10 opacity-80">Ottimo lavoro questo mese!</p>
+                        {loading ? (
+                            <div className="h-12 flex items-center"><Loader size={16} className="animate-spin text-slate-500" /></div>
+                        ) : (
+                            <>
+                                <div className={`text-3xl font-bold mb-1 relative z-10 ${parseFloat(stats?.savingsPercentage) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                    {parseFloat(stats?.savingsPercentage) >= 0 ? '-' : '+'}{Math.abs(stats?.savingsPercentage || 0).toFixed(0)}%
+                                </div>
+                                <p className="text-xs text-slate-300 relative z-10 opacity-80">
+                                    {parseFloat(stats?.savingsPercentage) >= 0 ? 'Ottimo lavoro questo mese!' : 'Consumi in aumento questo mese'}
+                                </p>
+                            </>
+                        )}
                     </div>
 
                     <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
@@ -89,7 +121,7 @@ const Layout = ({ user }) => {
                 <div className="absolute top-0 left-0 w-full h-64 bg-slate-50 -z-10" />
 
                 <div className="max-w-7xl mx-auto p-8 pt-10">
-                    <Outlet />
+                    <Outlet context={{ user }} />
                 </div>
             </main>
         </div>

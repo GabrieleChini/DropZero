@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { User, Mail, Phone, MapPin, Save, Loader, CheckCircle, AlertCircle } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
 import { fetchUserProfile, updateUserProfile } from '../services/api';
 
 const Profile = () => {
-    const userString = localStorage.getItem('user');
-    const localUser = userString ? JSON.parse(userString) : { _id: 'mock_id' };
+    const { user } = useOutletContext();
+    const localUser = user; // keep localUser alias for existing logic compatibility
 
     // Form State
     const [formData, setFormData] = useState({

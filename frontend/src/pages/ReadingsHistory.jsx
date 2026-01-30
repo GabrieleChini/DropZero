@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { fetchHistory } from '../services/api';
+import { useOutletContext } from 'react-router-dom';
 import { Download, Calendar, Droplets, Euro, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 
 const ReadingsHistory = () => {
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : { _id: 'mock_id' };
+    const { user } = useOutletContext();
 
     const [readings, setReadings] = useState([]);
     const [loading, setLoading] = useState(true);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchAdminStats, fetchAdminMapData, fetchAdminAlerts } from '../services/api';
+import { useOutletContext, Link } from 'react-router-dom';
 import { LayoutDashboard, AlertTriangle, Map as MapIcon, Users, Droplets, Loader, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 // Detailed Trento District Map (Schematic SVG)
 const TrentoMap = ({ zones, onZoneClick, selectedZone }) => {
@@ -92,8 +92,7 @@ const TrentoMap = ({ zones, onZoneClick, selectedZone }) => {
 };
 
 const AdminDashboard = () => {
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : { _id: 'mock_id' };
+    const { user } = useOutletContext();
 
     const [stats, setStats] = useState(null);
     const [mapData, setMapData] = useState([]);
@@ -277,10 +276,9 @@ const AdminDashboard = () => {
                         <thead>
                             <tr className="text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
                                 <th className="py-4 pl-4">Stato</th>
-                                <th className="py-4">Zona</th>
-                                <th className="py-4">Utente</th>
-                                <th className="py-4">Indirizzo</th>
-                                <th className="py-4 text-right pr-4">Consumo (m³)</th>
+                                <th className="py-4">Circoscrizione</th>
+                                <th className="py-4">Data Rilevazione</th>
+                                <th className="py-4 text-right pr-4">Consumo Anomalo (m³)</th>
                             </tr>
                         </thead>
                         <tbody className="text-sm">
@@ -295,8 +293,9 @@ const AdminDashboard = () => {
                                         </span>
                                     </td>
                                     <td className="py-4 font-medium text-slate-700">{alert.zone}</td>
-                                    <td className="py-4 text-slate-600 font-medium">{alert.user}</td>
-                                    <td className="py-4 text-slate-400 max-w-xs truncate">{alert.address}</td>
+                                    <td className="py-4 text-slate-500 font-medium">
+                                        {new Date(alert.date).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' })}
+                                    </td>
                                     <td className="py-4 text-right pr-4 font-bold text-slate-800">{alert.volume}</td>
                                 </tr>
                             )) : (

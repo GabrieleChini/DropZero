@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Droplets, TrendingDown, AlertTriangle, ArrowRight, Loader, Zap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useOutletContext, Link } from 'react-router-dom';
 import { fetchDashboardData, fetchChartData, submitReading } from '../services/api';
 import NewReadingModal from '../components/NewReadingModal';
 
@@ -33,8 +33,7 @@ const StatCard = ({ title, value, subtext, icon: Icon, trend, color }) => (
 );
 
 const Dashboard = () => {
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : { _id: 'mock_id' };
+    const { user } = useOutletContext();
 
     const [stats, setStats] = useState(null);
     const [chartData, setChartData] = useState([]);
@@ -48,7 +47,6 @@ const Dashboard = () => {
             return;
         }
         try {
-            // Parallel fetch
             const [dashboardStats, chart] = await Promise.all([
                 fetchDashboardData(user._id, user.token),
                 fetchChartData(user._id, user.token, timeframe)
@@ -68,7 +66,6 @@ const Dashboard = () => {
 
     const handleNewReading = async (value, date) => {
         await submitReading(user._id, user.token, value, date);
-        // Refresh data
         setLoading(true);
         await loadData();
     };
@@ -131,14 +128,14 @@ const Dashboard = () => {
                 <StatCard
                     title="Spesa Stimata"
                     value={stats?.estimatedCost ? `€ ${stats.estimatedCost.toFixed(2)}` : '€ 0.00'}
-                    subtext="Proiezione mensile corrente"
+                    subtext={stats?.costStatus || "Proiezione mensile corrente"}
                     icon={TrendingDown}
-                    trend="positive"
+                    trend={parseFloat(stats?.costTrendPercentage) <= 5 ? 'positive' : 'negative'}
                     color="bg-emerald-500"
                 />
                 <StatCard
                     title="Efficienza Impianto"
-                    value=" ottimale"
+                    value="Ottimale"
                     subtext="Nessuna perdita rilevata"
                     icon={Zap}
                     trend="positive"
@@ -146,24 +143,10 @@ const Dashboard = () => {
                 />
             </div>
 
-            {/* Admin Link (Only for Admins) */}
-            {(user.userType === 'ADMIN' || user.email === 'admin@dropzero.com') && (
-                <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-6 rounded-3xl shadow-lg border border-slate-700 flex justify-between items-center text-white">
-                    <div>
-                        <h3 className="text-xl font-bold flex items-center gap-2">
-                            <Zap className="text-yellow-400" /> Pannello Aamministratore
-                        </h3>
-                        <p className="text-slate-400 text-sm">Accedi alla vista aggregata del comune.</p>
-                    </div>
-                    <Link to="/admin" className="bg-white text-slate-900 px-6 py-3 rounded-xl font-bold hover:bg-slate-100 transition-colors">
-                        Vai alla Dashboard Comune
-                    </Link>
-                </div>
-            )}
+
 
             {/* Main Charts Area */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
                 {/* Weekly Trend Chart */}
                 <div className="bg-white p-8 rounded-[2rem] shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 lg:col-span-2 relative">
                     <div className="flex justify-between items-center mb-8">
