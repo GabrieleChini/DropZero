@@ -16,6 +16,13 @@ const ProtectedRoute = ({ user, children }) => {
   return children ? children : <Outlet />;
 };
 
+const AdminRoute = ({ user, children }) => {
+  if (!user || user.userType !== 'ADMIN') {
+    return <Navigate to="/" replace />;
+  }
+  return children ? children : <Outlet />;
+};
+
 function App() {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
@@ -34,7 +41,7 @@ function App() {
           <Route path="/readings" element={<ReadingsHistory />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/advice" element={<Advice />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin" element={<AdminRoute user={user}><AdminDashboard /></AdminRoute>} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
