@@ -241,6 +241,10 @@ const AdminDashboard = () => {
                                         <div className="p-4 bg-rose-500/20 border border-rose-500/30 rounded-xl text-rose-200 text-sm font-medium">
                                             ⚠️ Rilevate multiple anomalie. Verifica prioritaria richiesta.
                                         </div>
+                                    ) : selectedZone.status === 'WARNING' ? (
+                                        <div className="p-4 bg-amber-500/20 border border-amber-500/30 rounded-xl text-amber-200 text-sm font-medium">
+                                            🟠 Rilevata anomalia di consumo. Consigliata analisi locale.
+                                        </div>
                                     ) : (
                                         <div className="p-4 bg-emerald-500/20 border border-emerald-500/30 rounded-xl text-emerald-200 text-sm font-medium">
                                             ✅ Consumi nella norma. Nessuna azione richiesta.
