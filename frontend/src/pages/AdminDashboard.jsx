@@ -147,8 +147,8 @@ const AdminDashboard = () => {
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5">
-                    <div className="p-4 bg-sky-50 text-sky-600 rounded-2xl">
-                        <Droplets size={32} strokeWidth={2.5} />
+                    <div className="p-3 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                        <img src="/logo.jpeg" alt="DropZero" className="w-8 h-8 object-contain" />
                     </div>
                     <div>
                         <p className="text-slate-400 text-sm font-bold uppercase tracking-wider">Consumo 7gg (m³)</p>
