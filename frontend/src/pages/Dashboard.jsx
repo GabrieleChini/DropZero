@@ -160,7 +160,7 @@ const Dashboard = () => {
                             className="bg-slate-50 border border-slate-200 text-slate-600 text-sm rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-sky-500/20 font-bold"
                         >
                             <option value="90days">Ultimi 90 giorni</option>
-                            <option value="1year">Quest'anno</option>
+                            <option value="1year">Ultimo anno</option>
                         </select>
                     </div>
 
