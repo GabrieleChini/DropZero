@@ -41,9 +41,9 @@ const Layout = ({ user }) => {
     }
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] flex font-sans text-slate-900 overflow-hidden">
+        <div className="h-screen bg-[#f8fafc] flex font-sans text-slate-900 overflow-hidden">
             {/* Sidebar */}
-            <aside className="w-72 bg-white/80 backdrop-blur-xl border-r border-slate-200 hidden md:flex flex-col z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+            <aside className="w-72 bg-white/80 backdrop-blur-xl border-r border-slate-200 hidden md:flex flex-col z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)] h-screen sticky top-0">
                 <div className="p-8 pb-4 flex items-center gap-3">
                     <div className="bg-white p-1 rounded-xl shadow-sm border border-slate-100">
                         <img src="/logo.jpeg" alt="DropZero Logo" className="w-10 h-10 object-contain" />
