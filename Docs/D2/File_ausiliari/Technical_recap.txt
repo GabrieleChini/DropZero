@@ -1,0 +1,44 @@
+DropZero Technical Recap
+Questo documento riassume lo stack tecnologico, le librerie e i pattern di design utilizzati nello sviluppo di DropZero.
+    - Architettura Generale
+        DropZero è una web application basata su un'architettura MERN (MongoDB, Express, React, Node.js) con un frontend disaccoppiato che comunica tramite REST API.
+
+    - Backend (Node.js & Express)
+        Il backend gestisce la logica di business, l'autenticazione e la persistenza dei dati.
+        Framework: Express.js (v5.x)
+        Database: MongoDB con Mongoose come ODM.
+        Autenticazione:
+        JWT (JSON Web Tokens): Per la gestione delle sessioni sicure.
+        Google Auth Library: Per la verifica ufficiale dei token Google OAuth 2.0.
+        Bcrypt.js: Per l'hashing sicuro delle password locali.
+        Data Seeding:
+        Faker.js: Utilizzato per generare dati demografici e consumi realistici.
+        Dotenv: Gestione delle variabili d'ambiente (Porte, Database URI, Client ID).
+
+    - Frontend (React & Vite)
+        Il frontend è un'interfaccia moderna e reattiva focalizzata sull'esperienza utente (UX).
+        Tooling: Vite (v6+) per un ambiente di sviluppo rapido.
+        Librerie UI:
+        React (v19): Framework core.
+        React Router Dom (v7): Gestione delle rotte e protezione delle pagine (Admin/User).
+        Tailwind CSS (v3): Framework CSS utility-first per lo styling rapido e responsive.
+        Lucide React: Iconografia moderna e pulita.
+        @react-oauth/google: Integrazione del bottone ufficiale Google Login.
+        Visualizzazione Dati:
+        Recharts: Per la creazione di grafici dinamici e interattivi (LineChart).
+
+    - Layout & Design Patterns
+        Layout System: Utilizzo di un componente 
+        Layout.jsx centrale con una sidebar dinamica che si adatta al ruolo dell'utente (ADMIN vs PRIVATE).
+        Design Aesthetic: Focus su "Rich Aesthetics":
+        Glassmorphism (effetti sfocati sugli sfondi).
+        Gradienti moderni (Sky, Indigo, Emerald).
+        Micro-animazioni ed hover effects per un feeling premium.
+        Privacy First: Anonimizzazione dei dati personali nelle viste amministrative (località vs nomi).
+
+    - DevOps & Utilità
+        Containerization: Docker utilizzato per l'istanza di MongoDB.
+        Version Control: Git con una cronologia di commit organizzata per funzionalità (feat, fix, chore).
+        Environment: Configurazione tramite 
+        .env per la massima portabilità.
+
