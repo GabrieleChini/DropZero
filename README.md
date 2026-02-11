@@ -1,0 +1,10 @@
+💧 DropZero Progetto svolto per il corso di Ingegneria del Software tenuto dal Professor Paolo Giorgini presso l'Università degli Studi di Trento, all'interno del Dipartimento di Ingegneria e Scienze dell'Informazione, nel corso del secondo anno, primo semestre della laurea in Informatica.
+
+👥 Team member: 👑 Sami Facchinelli (team leader) 🧑‍💻 Gabriele Chini 🧑‍💻 Tiziano Manfredi
+
+🎯 Obiettivo del progetto DropZero nasce per affrontare il problema dello spreco idrico nel comune di Trento, promuovendo una gestione sostenibile della risorsa idrica attraverso la collaborazione attiva dei cittadini e degli enti gestori. Il progetto propone una piattaforma integrata che raccoglie e analizza i dati di consumo idrico, fornendo strumenti per il monitoraggio, la prevenzione degli sprechi e la pianificazione delle politiche di sostenibilità.
+
+🛠️ Soluzione proposta DropZero sfrutta sensori di misurazione elettronica installati su impianti domestici, commerciali e pubblici per acquisire dati sul volume d'acqua consumato. Ogni misurazione viene memorizzata in un database centralizzato, consentendo di avere uno storico completo dei consumi su base giornaliera, settimanale, mensile e annuale. La piattaforma offre due dashboard: 🏠 Dashboard cittadino: monitora i consumi, confronta l'acqua erogata con quella effettivamente utilizzata, identifica perdite invisibili e suggerisce consigli personalizzati per ottimizzare l'efficienza. 🏛️ Dashboard ente gestore: visualizza dati aggregati e anonimizzati per analisi dei trend di consumo, pianificazione della manutenzione e sviluppo di politiche di sostenibilità. 🔎 Algoritmi di anomaly detection segnalano sprechi e utilizzi anomali, mentre lo storico consente previsioni accurate e simulazioni sulla bolletta futura.
+
+🌱 Vantaggi: 👨‍👩‍👧‍👦 Per i cittadini: maggiore consapevolezza, riduzione delle bollette, rilevamento tempestivo delle perdite. 🏢 Per il comune: strumenti strategici per ottimizzare le risorse e sviluppare politiche mirate. 🌍 Per l'ambiente: contribuisce agli Obiettivi di Sviluppo Sostenibile Agenda 2030, tutela la qualità della vita.
+
