@@ -1,70 +1,10 @@
-# DropZero
+💧 DropZero Progetto svolto per il corso di Ingegneria del Software tenuto dal Professor Paolo Giorgini presso l'Università degli Studi di Trento, all'interno del Dipartimento di Ingegneria e Scienze dell'Informazione, nel corso del secondo anno, primo semestre della laurea in Informatica.
 
-**Sistema di Monitoraggio Idrico Intelligente per la Municipalità di Trento**
+👥 Team member: 👑 Sami Facchinelli (team leader) 🧑‍💻 Gabriele Chini 🧑‍💻 Tiziano Manfredi
 
-DropZero è una piattaforma web completa per la gestione efficiente delle risorse idriche. Offre una dashboard utente per il monitoraggio dei consumi domestici e una dashboard amministrativa per la gestione territoriale del comune di Trento.
+🎯 Obiettivo del progetto DropZero nasce per affrontare il problema dello spreco idrico nel comune di Trento, promuovendo una gestione sostenibile della risorsa idrica attraverso la collaborazione attiva dei cittadini e degli enti gestori. Il progetto propone una piattaforma integrata che raccoglie e analizza i dati di consumo idrico, fornendo strumenti per il monitoraggio, la prevenzione degli sprechi e la pianificazione delle politiche di sostenibilità.
 
----
+🛠️ Soluzione proposta DropZero sfrutta sensori di misurazione elettronica installati su impianti domestici, commerciali e pubblici per acquisire dati sul volume d'acqua consumato. Ogni misurazione viene memorizzata in un database centralizzato, consentendo di avere uno storico completo dei consumi su base giornaliera, settimanale, mensile e annuale. La piattaforma offre due dashboard: 🏠 Dashboard cittadino: monitora i consumi, confronta l'acqua erogata con quella effettivamente utilizzata, identifica perdite invisibili e suggerisce consigli personalizzati per ottimizzare l'efficienza. 🏛️ Dashboard ente gestore: visualizza dati aggregati e anonimizzati per analisi dei trend di consumo, pianificazione della manutenzione e sviluppo di politiche di sostenibilità. 🔎 Algoritmi di anomaly detection segnalano sprechi e utilizzi anomali, mentre lo storico consente previsioni accurate e simulazioni sulla bolletta futura.
 
-## 🚀 Caratteristiche Principali
+🌱 Vantaggi: 👨‍👩‍👧‍👦 Per i cittadini: maggiore consapevolezza, riduzione delle bollette, rilevamento tempestivo delle perdite. 🏢 Per il comune: strumenti strategici per ottimizzare le risorse e sviluppare politiche mirate. 🌍 Per l'ambiente: contribuisce agli Obiettivi di Sviluppo Sostenibile Agenda 2030, tutela la qualità della vita.
 
-### 👤 Per i Cittadini (User Dashboard)
-*   **Monitoraggio in Tempo Reale**: Grafici interattivi per visualizzare i consumi settimanali, mensili e annuali.
-*   **AI Smart Advice**: Consigli personalizzati generati dall'intelligenza artificiale per ridurre gli sprechi (es. rilevamento picchi anomali).
-*   **Gestione Letture**: Inserimento manuale delle letture del contatore con validazione istantanea.
-*   **Previsione Spesa**: Stima dei costi in base alle tariffe vigenti.
-
-### 🏢 Per il Comune (Admin Dashboard)
-*   **Mappa Interattiva di Trento**: Visualizzazione vettoriale (SVG) delle 12 circoscrizioni (Gardolo, Povo, Bondone, ecc.) con indicatori di stato.
-*   **Rilevamento Anomalie**: Tabella in tempo reale delle utenze con consumi critici (> 8m³/settimana) o perdite sospette.
-*   **Statistiche Aggregate**: Vista globale su contatori attivi e consumo totale del comune.
-
----
-
-## 🛠 Tecnologia
-
-Il progetto è sviluppato utilizzando lo stack **MERN**:
-*   **Frontend**: React, Vite, TailwindCSS (Glassmorphism UI), Recharts.
-*   **Backend**: Node.js, Express.
-*   **Database**: MongoDB (Mongoose) con script di seeding avanzato.
-
----
-
-## 📦 Installazione e Avvio
-
-### Prerequisiti
-*   Node.js (v18+)
-*   MongoDB (Locale o Atlas)
-
-### 1. Setup Backend
-```bash
-cd backend
-npm install
-# Creare file .env con:
-# PORT=5001
-# MONGODB_URI=...
-# JWT_SECRET=...
-
-# (Opzionale) Popolare il database con dati realistici
-node seed.js
-
-# Avvio server
-npm run dev
-```
-
-### 2. Setup Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-### 3. Accesso Demo
-*   **Utente**: `mario.rossi@email.com` / `password123`
-*   **Admin**: `admin@dropzero.com` / `password123`
-
----
-
-## 👨‍💻 Autore
-**Gabriele Chini**
-Ingegneria del Software - Università di Trento
