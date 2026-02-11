@@ -1,0 +1,22 @@
+Distribuzione del lavoro all'interno del D1:
+
+Sami:
+- Creazione del punto 1 --> Descrizione del progetto, vantaggi e soluzione
+- Prima creazione del punto 2 --> Requisiti funzionali
+- Prima creazione del punto 3 --> Requisiti non funzionali
+- Creazione dei mockup utilizzati nel punto 6
+- Correzzioni grafiche al progetto
+- Controllo della correttezza di quanto fatto dai compagni
+
+
+Tiziano:
+- Creazione del punto 5 --> User story
+- Creazione del punto 6 --> Front-end design
+- Creazione del punto 7 --> User flow
+- Seconda creazione del punto 3 --> Requisiti non funzionali --> in seguito a consigli del tutor
+- Controllo della correttezza di quanto fatto dai compagni
+
+
+Gabriele: 
+- Creazione del punto 4 --> Use case diagramm
+- Controllo della correttezza di quanto fatto dai compagni

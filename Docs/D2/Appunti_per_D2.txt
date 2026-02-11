@@ -1,0 +1,12 @@
+Indice D2 - Sviluppo
+
+    Scopo del documento
+    1. Web APIs
+    2. Implementation
+        2.1. Repository Organization
+        2.2. Branching strategy e organizzazione del lavoro
+        2.3. Dependencies
+        2.4. Database
+        2.5. Testing
+    3. FrontEnd
+    4. Deployment

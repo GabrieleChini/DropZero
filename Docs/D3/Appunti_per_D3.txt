@@ -1,0 +1,9 @@
+Indice D3 - Analisi e Progettazione
+
+    Scopo del documento
+    1. Analisi dei Componenti
+        1.1. Definizione dei componenti
+        1.2. Diagramma dei componenti
+    2. Diagramma delle classi
+        2.1. Diagramma delle classi complessivo 
+    3. Dal class diagram alle API
