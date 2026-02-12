@@ -1,0 +1,9 @@
+Video per Esame:  Il video richiesto per l’esame è obbligatorio per tutti e non coincide con il video della challenge. 
+Per la consegna dell’esame dovete sottomettere un video di circa 5–6 minuti che mostri il funzionamento della vostra web application dal punto di vista tecnico. 
+Come discusso più volte a lezione, il video della challenge e il video per l’esame hanno scopi diversi:
+
+il video della challenge è pensato per presentare l’idea e il valore del progetto;
+
+il video dell’esame serve a noi docenti come supporto alla valutazione, per capire come funziona concretamente la vostra web app.
+
+Di conseguenza, il video per l’esame è richiesto anche a chi non partecipa alla challenge.
