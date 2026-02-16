@@ -50,7 +50,7 @@ const Login = ({ setUser }) => {
             <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
                 <div className="flex flex-col items-center mb-8">
                     <div className="p-1 mb-2">
-                        <img src="/logo.jpeg" alt="DropZero Logo" className="w-16 h-16 object-contain" />
+                        <img src="/logo.png" alt="DropZero Logo" className="w-16 h-16 object-contain" />
                     </div>
                     <h2 className="text-2xl font-bold text-slate-800">Accedi a DropZero</h2>
                     <p className="text-slate-400 mt-2 text-center text-sm">Monitora i tuoi consumi idrici in tempo reale</p>

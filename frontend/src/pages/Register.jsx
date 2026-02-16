@@ -56,7 +56,7 @@ const Register = ({ setUser }) => {
             <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
                 <div className="flex flex-col items-center mb-8">
                     <div className="p-1 mb-2">
-                        <img src="/logo.jpeg" alt="DropZero Logo" className="w-16 h-16 object-contain" />
+                        <img src="/logo.png" alt="DropZero Logo" className="w-16 h-16 object-contain" />
                     </div>
                     <h2 className="text-2xl font-bold text-slate-800">Crea Account</h2>
                 </div>
