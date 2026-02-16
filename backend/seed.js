@@ -64,7 +64,7 @@ const seedData = async () => {
         });
 
         // Create Demo User for Google Mock
-        const demoUser = await User.create({
+        let demoUser = await User.create({
             email: 'gabrielegabryc@gmail.com',
             firstName: 'Gabriele',
             lastName: 'Chini',
@@ -78,6 +78,21 @@ const seedData = async () => {
         });
         users.push(demoUser);
 
+        // Add second Demo User as requested
+        demoUser = await User.create({
+            email: "mario.rossi@email.com",
+            password: 'password123',
+            userType: 'PRIVATE',
+            firstName: "Mario",
+            lastName: "Rossi",
+            codiceFiscale: faker.string.alphanumeric(16).toUpperCase(),
+            address: faker.location.streetAddress({ useFullAddress: true }),
+            phoneNumber: faker.phone.number(),
+            verified: true,
+            status: 'ACTIVE',
+            preferences: { theme: 'LIGHT', language: 'it' }
+        });
+        users.push(demoUser);
         // Create 20 Users
         for (let i = 0; i < 20; i++) {
             const firstName = faker.person.firstName();
