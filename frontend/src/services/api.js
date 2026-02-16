@@ -1,5 +1,38 @@
 const API_URL = 'http://localhost:5001/api';
 
+export const login = async (credentials) => {
+    const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Errore durante il login');
+    return data;
+};
+
+export const register = async (userData) => {
+    const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Errore durante la registrazione');
+    return data;
+};
+
+export const googleLogin = async (token) => {
+    const response = await fetch(`${API_URL}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Errore durante l\'autenticazione con Google');
+    return data;
+};
+
 export const fetchDashboardData = async (userId, token) => {
     const response = await fetch(`${API_URL}/readings/dashboard/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }

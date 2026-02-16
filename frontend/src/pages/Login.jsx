@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Droplets } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
+import { login, googleLogin } from '../services/api';
 
 const Login = ({ setUser }) => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -11,27 +12,17 @@ const Login = ({ setUser }) => {
     const handleGoogleSuccess = async (credentialResponse) => {
         try {
             setError('');
-            const response = await fetch('http://localhost:5001/api/auth/google', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: credentialResponse.credential })
-            });
+            const data = await googleLogin(credentialResponse.credential);
 
-            const data = await response.json();
-
-            if (response.ok) {
-                setUser(data);
-                localStorage.setItem('user', JSON.stringify(data));
-                if (data.userType === 'ADMIN' || data.email === 'admin@dropzero.com') {
-                    navigate('/admin');
-                } else {
-                    navigate('/');
-                }
+            setUser(data);
+            localStorage.setItem('user', JSON.stringify(data));
+            if (data.userType === 'ADMIN' || data.email === 'admin@dropzero.com') {
+                navigate('/admin');
             } else {
-                setError(data.message || 'Errore autenticazione Google');
+                navigate('/');
             }
         } catch (err) {
-            setError('Impossibile connettersi al server');
+            setError(err.message || 'Errore autenticazione Google');
         }
     };
 
@@ -40,27 +31,17 @@ const Login = ({ setUser }) => {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:5001/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
+            const data = await login(formData);
 
-            const data = await response.json();
-
-            if (response.ok) {
-                setUser(data);
-                localStorage.setItem('user', JSON.stringify(data));
-                if (data.userType === 'ADMIN') {
-                    navigate('/admin');
-                } else {
-                    navigate('/');
-                }
+            setUser(data);
+            localStorage.setItem('user', JSON.stringify(data));
+            if (data.userType === 'ADMIN') {
+                navigate('/admin');
             } else {
-                setError(data.message || 'Credenziali non valide');
+                navigate('/');
             }
         } catch (err) {
-            setError('Errore di connessione al server');
+            setError(err.message || 'Credenziali non valide');
         }
     };
 
